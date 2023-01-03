@@ -1,7 +1,15 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { firebaseAuth } from '../config';
 
-export default function Loading(){
+export default function Loading({navigation}){
+
+    useEffect(()=> {
+        firebaseAuth.onAuthStateChanged(user => {
+            navigation.navigate(user? 'Dashboard': 'Login')
+        })
+    }, []);
+
     return(
         <View style = {styles.container}>
             <Text style = {styles.textStyle}>Loading</Text>
