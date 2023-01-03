@@ -11,14 +11,18 @@ import {
     TouchableOpacity,
     ScrollView
 } from 'react-native';
-
+import { firebaseAuth } from '../config';
 
 export default function Register({navigation}){
     const [Email, setEmail] = useState('');
     const [Password, setPassword] = useState('');
+    const [Error, setError] = useState(null);
 
     const handlePress = () => {
-        console.log(Email, Password)
+        console.log(Email, Password);
+        firebaseAuth.createUserWithEmailAndPassword(Email, Password)
+        .then(() => navigation.navigate('Dashboard'))
+        .catch(error => setError(error.message));
     }
 
     return(
@@ -53,6 +57,9 @@ export default function Register({navigation}){
                         autoCapitalize = 'none'
                     />
                 </View>
+                {Error? 
+                    <Text style = {styles.errorMessage}>{Error}</Text>:null
+                }
                 <TouchableOpacity style = {styles.buttonContainer} onPress = {handlePress}>
                     <Text style = {styles.buttonStyle}>Sign Up</Text>
                 </TouchableOpacity>
@@ -72,7 +79,7 @@ const styles = StyleSheet.create({
         flex: 1, 
         alignItems: 'center',
         backgroundColor: '#000',
-        paddingTop: 150
+        paddingTop: 130
     },
     titleStyle : {
         fontSize: 40,
@@ -107,5 +114,8 @@ const styles = StyleSheet.create({
     signUpContainer: {
         marginTop: 35,
         flexDirection: 'row'
+    },
+    errorMessage: {
+        color: 'red'
     }
 })
